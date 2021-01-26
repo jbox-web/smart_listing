@@ -1,6 +1,6 @@
-require 'rails_helper'
+require 'spec_helper'
 
-feature 'Combine custom filtering' do
+RSpec.feature 'Combine custom filtering' do
   fixtures :users
 
   scenario 'The user search user, change pagination and change page', js: true do

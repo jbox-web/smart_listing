@@ -1,7 +1,7 @@
-require 'rails_helper'
+require 'spec_helper'
 
 module SmartListing
-  describe Base do
+  RSpec.describe Base do
     describe '#per_page' do
 
       context "when there is no specification in params or cookies" do

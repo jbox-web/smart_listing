@@ -1,6 +1,6 @@
-require 'rails_helper'
+require 'spec_helper'
 
-feature 'View a list of items' do
+RSpec.feature 'View a list of items' do
   fixtures :users
   scenario 'The user navigate through users', js: true do
 

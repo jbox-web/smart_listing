@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 require 'smart_listing/helper'
 
 module SmartListing::Helper
@@ -21,7 +21,7 @@ module SmartListing::Helper
     end
   end
 
-  describe ControllerExtensions do
+  RSpec.describe ControllerExtensions do
     describe "#smart_listing_create" do
       it "create a list with params and cookies" do
         controller = UsersController.new

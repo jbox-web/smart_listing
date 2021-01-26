@@ -1,6 +1,6 @@
-require 'rails_helper'
+require 'spec_helper'
 
-feature "Manage items" do
+RSpec.feature "Manage items" do
   scenario "Add a new item", js: true do
     visit admin_users_path
 
