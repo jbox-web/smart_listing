@@ -5,6 +5,9 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!
 
+  # Use DB agnostic schema by default
+  load Rails.root.join('db', 'schema.rb').to_s
+
   # Run tests in random order
   config.order = :random
   Kernel.srand config.seed
