@@ -1,5 +1,11 @@
 # SmartListing
 
+[![GitHub license](https://img.shields.io/github/license/jbox-web/smart_listing.svg)](https://github.com/jbox-web/smart_listing/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/jbox-web/smart_listing.svg)](https://github.com/jbox-web/smart_listing/releases/latest)
+[![CI](https://github.com/jbox-web/smart_listing/workflows/CI/badge.svg)](https://github.com/jbox-web/smart_listing/actions)
+[![Code Climate](https://codeclimate.com/github/jbox-web/smart_listing/badges/gpa.svg)](https://codeclimate.com/github/jbox-web/smart_listing)
+[![Test Coverage](https://codeclimate.com/github/jbox-web/smart_listing/badges/coverage.svg)](https://codeclimate.com/github/jbox-web/smart_listing/coverage)
+
 SmartListing helps creating AJAX-enabled lists of ActiveRecord collections or arrays with pagination, filtering, sorting and in-place editing.
 
 [See it in action](http://showcase.sology.eu/smart_listing)
