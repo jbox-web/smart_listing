@@ -1,34 +1,16 @@
-*.rbc
-*.sassc
-.sass-cache
-capybara-*.html
-.rspec
-.rvmrc
-/.bundle
-/vendor/bundle
-/log/*
-/tmp/*
-/db/*.sqlite3
-/public/system/*
-/coverage/
-/spec/tmp/*
-**.orig
-rerun.txt
-pickle-email-*.html
-.project
-config/initializers/secret_token.rb
-*.gem
-/test/*
+# Ignore bundler config.
+.bundle/
 
-.ruby-version
-.ruby-gemset
+# Ignore Gemfile.lock
+Gemfile.lock
+gemfiles/*.lock
 
-*.swp
-*.swo
+# Ignore test files
+coverage/
 
+# Ignore dummy app files
 spec/dummy/db/*.sqlite3
+spec/dummy/db/*.sqlite3-journal
 spec/dummy/log/*.log
+spec/dummy/public/
 spec/dummy/tmp/
-tags
-
-.byebug_history
