@@ -28,7 +28,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def update
-    @user.update_attributes(user_params)
+    @user.update(user_params)
   end
 
   def destroy
