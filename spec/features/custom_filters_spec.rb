@@ -10,6 +10,7 @@ RSpec.feature 'Combine custom filtering' do
     within(".pagination-per-page") { click_on "10" }
     expect(page).to have_selector('tr.editable', count: 8)
     fill_in "filter", with: "test"
+    sleep 1
     expect(page).to have_selector('tr.editable', count: 4)
     within(".pagination-per-page") { click_on "3" }
     within(".pagination") { click_on "2" }

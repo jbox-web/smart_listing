@@ -203,7 +203,7 @@ module SmartListing
       sort = nil
 
       if @options[:sort_attributes] == :implicit
-        sort = sort_params.dup if sort_params.present?
+        sort = sort_params.dup.reject { |k, v| v.blank? } if sort_params.present?
       elsif @options[:sort_attributes]
         @options[:sort_attributes].each do |a|
           k, _v = a
