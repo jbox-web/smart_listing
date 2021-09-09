@@ -194,7 +194,7 @@ module SmartListing
       if store.is_a?(ActionDispatch::Cookies::CookieJar)
         store["#{base_param}_#{param_names[key]}"] = value
       else
-        store[base_param] ||= {}
+        store[base_param] ||= {}.with_indifferent_access
         store[base_param][param_names[key]] = value
       end
     end
@@ -207,11 +207,11 @@ module SmartListing
       elsif @options[:sort_attributes]
         @options[:sort_attributes].each do |a|
           k, _v = a
-          if sort_params && sort_params[k.to_s]
-            dir = ['asc', 'desc', ''].delete(sort_params[k.to_s])
+          if sort_params && !sort_params[k.to_s].blank?
+            dir = ['asc', 'desc'].delete(sort_params[k.to_s])
 
             if dir
-              sort ||= {}
+              sort ||= {}.with_indifferent_access
               sort[k] = dir
             end
           end
