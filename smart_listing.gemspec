@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
 
   s.add_runtime_dependency 'kaminari', '>= 0.17'
-  s.add_runtime_dependency 'rails', '>= 5.2'
+  s.add_runtime_dependency 'rails', '>= 6.0'
 
   s.add_development_dependency 'appraisal'
   s.add_development_dependency 'bootstrap-sass'
