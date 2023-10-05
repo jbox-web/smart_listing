@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'smart_listing/helper'
 
 module SmartListing::Helper
   class UsersController < ApplicationController
