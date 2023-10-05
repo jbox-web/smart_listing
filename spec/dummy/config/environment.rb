@@ -1,9 +1,7 @@
-# Load the Rails application.
-require File.expand_path('../application', __FILE__)
+# frozen_string_literal: true
 
-require "jquery-rails"
-require 'coffee-rails'
-require 'bootstrap-sass'
+# Load the Rails application.
+require_relative 'application'
 
 # Initialize the Rails application.
 Rails.application.initialize!

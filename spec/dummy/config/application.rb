@@ -1,20 +1,22 @@
-require File.expand_path('../boot', __FILE__)
+# frozen_string_literal: true
 
-# Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "action_view/railtie"
-require "sprockets/railtie"
-# require "rails/test_unit/railtie"
+# Load Bundler
+require_relative 'boot'
 
+# Load Rails
+require 'rails/all'
+
+# Require the gems listed in Gemfile
 Bundler.require(*Rails.groups)
-require "smart_listing"
+
+# Load tested lib
+require 'smart_listing'
+require 'jquery-rails'
+require 'coffee-rails'
+require 'bootstrap-sass'
 
 module Dummy
   class Application < Rails::Application
-    if Rails::VERSION::MAJOR == 7
-      config.active_record.legacy_connection_handling = false
-    end
+    config.load_defaults Rails::VERSION::STRING.to_f
   end
 end

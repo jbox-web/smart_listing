@@ -1,3 +1,4 @@
+# Configure RSpec
 RSpec.configure do |config|
   config.include WaitForAjax, type: :feature
 
@@ -20,13 +21,15 @@ RSpec.configure do |config|
   # see: https://relishapp.com/rspec/rspec-core/v/3-8/docs/configuration/zero-monkey-patching-mode
   config.disable_monkey_patching!
 
-  DatabaseCleaner.strategy = :truncation
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
+  end
 
-  config.before :each do
+  config.before(:each) do
     DatabaseCleaner.start
   end
 
-  config.after do
+  config.after(:each) do
     DatabaseCleaner.clean
   end
 

@@ -2,9 +2,10 @@ require 'spec_helper'
 
 RSpec.feature 'View a list of items' do
   fixtures :users
-  scenario 'The user navigate through users', js: true do
 
+  scenario 'The user navigate through users', js: true do
     visit root_path
+
     #page_sizes => [3, 10]
     expect(page).to have_content("Betty")
     expect(page).to_not have_content("Edward")
@@ -16,7 +17,6 @@ RSpec.feature 'View a list of items' do
   end
 
   scenario "The user sort users", js: true do
-
     visit sortable_users_path
 
     find('.name a').click
