@@ -10,9 +10,9 @@ AllCops:
   TargetRubyVersion: 3.1
   Exclude:
     - bin/*
-    - lib/generators/**/*.rb
     - gemfiles/*
     - spec/**/*
+    - lib/generators/**/*.rb
 
 Style/Documentation:
   Enabled: false
