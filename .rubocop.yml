@@ -12,7 +12,7 @@ AllCops:
   Exclude:
     - bin/*
     - gemfiles/*
-    - spec/**/*
+    - spec/dummy/**/*
     - lib/generators/**/*.rb
 
 Gemspec/RequireMFA:
@@ -94,3 +94,29 @@ Metrics/BlockLength:
 
 Metrics/BlockNesting:
   Enabled: false
+
+#########
+# RSPEC #
+#########
+
+RSpec/NotToNot:
+  EnforcedStyle: to_not
+
+RSpec/ExampleLength:
+  Max: 9
+
+RSpec/MultipleExpectations:
+  Max: 4
+
+RSpec/MetadataStyle:
+  EnforcedStyle: hash
+
+############
+# CAPYBARA #
+############
+
+Capybara/NegationMatcher:
+  EnforcedStyle: not_to
+
+Capybara/ClickLinkOrButtonStyle:
+  EnforcedStyle: strict

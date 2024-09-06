@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'simplecov'
 
 # Start SimpleCov
@@ -23,3 +25,24 @@ Dir[File.expand_path('support/**/*.rb', __dir__)].each { |f| require f }
 # Load our own config
 require_relative 'config_capybara'
 require_relative 'config_rspec'
+
+module Test
+  class UsersController < ApplicationController
+    include SmartListing::Helper::ControllerExtensions
+    helper  SmartListing::Helper
+
+    attr_accessor :smart_listings
+
+    def params
+      { value: 'params' }
+    end
+
+    def cookies
+      { value: 'cookies' }
+    end
+
+    def smart_listing_collection
+      [1, 2]
+    end
+  end
+end
