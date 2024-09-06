@@ -39,7 +39,11 @@ module SmartListing
       class_attribute :smart_listing_helpers
 
       def initialize(smart_listing_name, smart_listing, template, options, proc)
-        @smart_listing_name, @smart_listing, @template, @options, @proc = smart_listing_name, smart_listing, template, options, proc
+        @smart_listing_name = smart_listing_name
+        @smart_listing = smart_listing
+        @template = template
+        @options = options
+        @proc = proc
       end
 
       def name
@@ -47,9 +51,10 @@ module SmartListing
       end
 
       def paginate(_options = {})
-        if @smart_listing.collection.respond_to? :current_page
-          @template.paginate @smart_listing.collection, **{ remote: @smart_listing.remote?, param_name: @smart_listing.param_name(:page) }.merge(@smart_listing.kaminari_options)
-        end
+        return unless @smart_listing.collection.respond_to? :current_page
+
+        options = { remote: @smart_listing.remote?, param_name: @smart_listing.param_name(:page) }.merge(@smart_listing.kaminari_options)
+        @template.paginate @smart_listing.collection, **options
       end
 
       def collection
@@ -118,18 +123,18 @@ module SmartListing
 
       # Renders the main partial (whole list)
       def render_list(locals = {})
-        if @smart_listing.partial
-          @template.render partial: @smart_listing.partial, locals: { smart_listing: self }.merge(locals || {})
-        end
+        return unless @smart_listing.partial
+
+        @template.render partial: @smart_listing.partial, locals: { smart_listing: self }.merge(locals || {})
       end
 
       # Basic render block wrapper that adds smart_listing reference to local variables
       def render(options = {}, locals = {}, &block)
         if locals.empty?
           options[:locals] ||= {}
-          options[:locals].merge!(smart_listing: self)
+          options[:locals][:smart_listing] = self
         else
-          locals.merge!({ smart_listing: self })
+          locals[:smart_listing] = self
         end
 
         @template.render options, locals, &block
@@ -149,24 +154,23 @@ module SmartListing
           new_item_button_url: options.delete(:link),
           new_item_button_classes: new_item_button_classes,
           new_item_button_text: options.delete(:text) || @template.t('smart_listing.actions.new'),
-          new_item_autoshow: block_given?,
+          new_item_autoshow: block.present?,
           new_item_content: nil
         }
 
-        unless block_given?
-          locals[:placeholder_classes] = [@template.smart_listing_config.classes(:new_item_placeholder), @template.smart_listing_config.classes(:hidden)]
-          locals[:new_item_action_classes] = [@template.smart_listing_config.classes(:new_item_action)]
-          locals[:new_item_action_classes] << @template.smart_listing_config.classes(:hidden) if !empty? && max_count?
-
-          @template.render(partial: 'smart_listing/item_new', locals: default_locals.merge(locals))
-        else
+        if block
           locals[:placeholder_classes] = [@template.smart_listing_config.classes(:new_item_placeholder)]
           locals[:placeholder_classes] << @template.smart_listing_config.classes(:hidden) if !empty? && max_count?
           locals[:new_item_action_classes] = [@template.smart_listing_config.classes(:new_item_action), @template.smart_listing_config.classes(:hidden)]
 
           locals[:new_item_content] = @template.capture(&block)
-          @template.render(partial: 'smart_listing/item_new', locals: default_locals.merge(locals))
+        else
+          locals[:placeholder_classes] = [@template.smart_listing_config.classes(:new_item_placeholder), @template.smart_listing_config.classes(:hidden)]
+          locals[:new_item_action_classes] = [@template.smart_listing_config.classes(:new_item_action)]
+          locals[:new_item_action_classes] << @template.smart_listing_config.classes(:hidden) if !empty? && max_count?
         end
+
+        @template.render(partial: 'smart_listing/item_new', locals: default_locals.merge(locals))
       end
 
       def count
@@ -196,8 +200,9 @@ module SmartListing
     end
 
     # Outputs smart list container
+    # rubocop:disable Style/IfUnlessModifier
     def smart_listing_for(name, *args, &block)
-      raise ArgumentError, 'Missing block' unless block_given?
+      raise ArgumentError, 'Missing block' unless block
 
       name = name.to_sym
       options = args.extract_options!
@@ -206,26 +211,24 @@ module SmartListing
       builder = Builder.new(name, @smart_listings[name], self, options, block)
 
       data = {}
-      data[smart_listing_config.data_attributes(:max_count)] = @smart_listings[name].max_count if @smart_listings[name].max_count && @smart_listings[name].max_count > 0
-      data[smart_listing_config.data_attributes(:item_count)] = @smart_listings[name].count
-      data[smart_listing_config.data_attributes(:href)] = @smart_listings[name].href if @smart_listings[name].href
+      data[smart_listing_config.data_attributes(:max_count)]     = @smart_listings[name].max_count if @smart_listings[name].max_count && @smart_listings[name].max_count > 0
+      data[smart_listing_config.data_attributes(:item_count)]    = @smart_listings[name].count
+      data[smart_listing_config.data_attributes(:href)]          = @smart_listings[name].href if @smart_listings[name].href
       data[smart_listing_config.data_attributes(:callback_href)] = @smart_listings[name].callback_href if @smart_listings[name].callback_href
       data.merge!(options[:data]) if options[:data]
 
-      output =
-        if bare
-          capture(builder, &block)
-        else
-          content_tag(:div, class: smart_listing_config.classes(:main), id: name, data: data) do
-            concat(content_tag(:div, '', class: smart_listing_config.classes(:loading)))
-            concat(content_tag(:div, class: smart_listing_config.classes(:content)) do
-              concat(capture(builder, &block))
-            end)
-          end
+      if bare
+        capture(builder, &block)
+      else
+        content_tag(:div, class: smart_listing_config.classes(:main), id: name, data: data) do
+          concat(content_tag(:div, '', class: smart_listing_config.classes(:loading)))
+          concat(content_tag(:div, class: smart_listing_config.classes(:content)) do
+            concat(capture(builder, &block))
+          end)
         end
-
-      output
+      end
     end
+    # rubocop:enable Style/IfUnlessModifier
 
     def smart_listing_render(name = controller_name, *args)
       options = args.dup.extract_options!
@@ -272,18 +275,14 @@ module SmartListing
             template = 'action_edit'
           when :destroy
             locals[:icon] ||= smart_listing_config.classes(:icon_trash)
-            locals.merge!(
-              confirmation: action.delete(:confirmation)
-            )
+            locals[:confirmation] = action.delete(:confirmation)
             template = 'action_delete'
           when :custom
-            locals.merge!(
-              html_options: action
-            )
+            locals[:html_options] = action
             template = 'action_custom'
           end
 
-          locals[:icon] = [locals[:icon], smart_listing_config.classes(:muted)] if !locals[:action_if]
+          locals[:icon] = [locals[:icon], smart_listing_config.classes(:muted)] unless locals[:action_if]
 
           if template
             concat(render(partial: "smart_listing/#{template}", locals: locals))
@@ -316,7 +315,7 @@ module SmartListing
 
       # don't update list if params are missing (prevents interfering with other lists)
       if params.keys.select { |k| k.include?('smart_listing') }.present? && !params[smart_listing.base_param]
-        return unless options[:force]
+        return unless options[:force] # rubocop:disable Style/SoleNestedConditional
       end
 
       builder = Builder.new(name, smart_listing, self, {}, nil)

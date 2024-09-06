@@ -42,11 +42,7 @@ module SmartListing
         callback_href: nil # set SmartListing callback url (in case when different than current url)
       }.merge(SmartListing.config(config_profile).global_options).merge(options)
 
-      if @options[:array]
-        @collection = collection.to_a
-      else
-        @collection = collection
-      end
+      @collection = @options[:array] ? collection.to_a : collection
     end
 
     def setup(params, cookies)
@@ -56,7 +52,7 @@ module SmartListing
       @params.except!(*UNSAFE_PARAMS)
 
       @page = get_param :page
-      @per_page = !get_param(:per_page) || get_param(:per_page).empty? ? (@options[:memorize_per_page] && get_param(:per_page, cookies).to_i > 0 ? get_param(:per_page, cookies).to_i : page_sizes.first) : get_param(:per_page).to_i
+      @per_page = !get_param(:per_page) || get_param(:per_page).empty? ? (@options[:memorize_per_page] && get_param(:per_page, cookies).to_i > 0 ? get_param(:per_page, cookies).to_i : page_sizes.first) : get_param(:per_page).to_i # rubocop:disable Style/NestedTernaryOperator
       @per_page = page_sizes.first unless page_sizes.include?(@per_page) || (unlimited_per_page? && @per_page == 0)
 
       @sort = parse_sort(get_param(:sort)) || @options[:default_sort]
@@ -69,10 +65,8 @@ module SmartListing
 
       # Reset @page if greater than total number of pages
       if @per_page > 0
-        no_pages = (@count.to_f / @per_page.to_f).ceil.to_i
-        if @page.to_i > no_pages
-          @page = no_pages
-        end
+        no_pages = (@count.to_f / @per_page.to_f).ceil.to_i # rubocop:disable Style/FloatDivision
+        @page = no_pages if @page.to_i > no_pages
       end
 
       if @options[:array]
@@ -91,7 +85,7 @@ module SmartListing
             if xval.nil? || yval.nil?
               xval.nil? ? 1 : -1
             else
-              if @sort.to_h.first[1] == 'asc'
+              if @sort.to_h.first[1] == 'asc' # rubocop:disable Style/IfInsideElse
                 (xval <=> yval) || (xval && !yval ? 1 : -1)
               else
                 (yval <=> xval) || (yval && !xval ? 1 : -1)
@@ -101,18 +95,15 @@ module SmartListing
         end
         if @options[:paginate] && @per_page > 0
           @collection = ::Kaminari.paginate_array(@collection).page(@page).per(@per_page)
-          if @collection.length == 0
-            @collection = @collection.page(@collection.total_pages)
-          end
+          @collection = @collection.page(@collection.total_pages) if @collection.empty?
         end
       else
         # let's sort by all attributes
         #
-        @collection = @collection.order(sort_keys.collect { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] }.compact) if @sort && !@sort.empty?
-
-        if @options[:paginate] && @per_page > 0
-          @collection = @collection.page(@page).per(@per_page)
+        if @sort && !@sort.empty?
+          @collection = @collection.order(sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
         end
+        @collection = @collection.page(@page).per(@per_page) if @options[:paginate] && @per_page > 0
       end
     end
 
@@ -163,11 +154,7 @@ module SmartListing
     def all_params(overrides = {})
       ap = { base_param => {} }
       @options[:param_names].each do |k, v|
-        if overrides[k]
-          ap[base_param][v] = overrides[k]
-        else
-          ap[base_param][v] = send(k)
-        end
+        ap[base_param][v] = overrides[k] || send(k)
       end
       ap
     end
@@ -203,17 +190,17 @@ module SmartListing
       sort = nil
 
       if @options[:sort_attributes] == :implicit
-        sort = sort_params.dup.reject { |k, v| v.blank? } if sort_params.present?
+        sort = sort_params.dup.reject { |_k, v| v.blank? } if sort_params.present?
       elsif @options[:sort_attributes]
         @options[:sort_attributes].each do |a|
           k, _v = a
-          if sort_params && !sort_params[k.to_s].blank?
-            dir = ['asc', 'desc'].delete(sort_params[k.to_s])
+          next unless sort_params && !sort_params[k.to_s].blank?
 
-            if dir
-              sort ||= {}.with_indifferent_access
-              sort[k] = dir
-            end
+          dir = %w[asc desc].delete(sort_params[k.to_s])
+
+          if dir
+            sort ||= {}.with_indifferent_access
+            sort[k] = dir
           end
         end
       end

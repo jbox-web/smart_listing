@@ -4,6 +4,7 @@ require:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-rspec_rails
 
 AllCops:
   NewCops: enable
@@ -14,28 +15,66 @@ AllCops:
     - spec/**/*
     - lib/generators/**/*.rb
 
+Gemspec/RequireMFA:
+  Enabled: false
+
+#########
+# STYLE #
+#########
+
 Style/Documentation:
   Enabled: false
 
-Layout/EmptyLinesAroundModuleBody:
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison
+
+##########
+# LAYOUT #
+##########
+
+Layout/LineLength:
+  Max: 125
+  Exclude:
+    - app/helpers/smart_listing/helper.rb
+    - lib/smart_listing.rb
+    - smart_listing.gemspec
+
+Layout/EmptyLines:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
   Enabled: false
 
 Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
-Layout/LineLength:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
-Metrics/BlockLength:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
-Metrics/ClassLength:
+##########
+# NAMING #
+##########
+
+Naming/BlockForwarding:
+  Enabled: false
+
+###########
+# METRICS #
+###########
+
+Metrics/AbcSize:
   Enabled: false
 
 Metrics/MethodLength:
-  Enabled: false
-
-Metrics/ModuleLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
@@ -44,5 +83,14 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Metrics/AbcSize:
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/BlockNesting:
   Enabled: false

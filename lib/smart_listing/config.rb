@@ -5,13 +5,13 @@ module SmartListing
 
   def self.configure(profile = nil)
     profile ||= :default
-    @@configs ||= {}
+    @@configs ||= {} # rubocop:disable Style/ClassVars
     yield @@configs[profile] ||= SmartListing::Configuration.new
   end
 
   def self.config(profile = nil)
     profile ||= :default
-    @@configs ||= {}
+    @@configs ||= {} # rubocop:disable Style/ClassVars
     @@configs[profile] ||= SmartListing::Configuration.new
   end
 
@@ -33,7 +33,7 @@ module SmartListing
         page_sizes: DEFAULT_PAGE_SIZES.dup, # set available page sizes array
         kaminari_options: { theme: 'smart_listing' }, # Kaminari's paginate helper options
         sort_dirs: [nil, 'asc', 'desc'], # Default sorting directions cycle of sortables
-        remote: true                        # Default remote mode
+        remote: true                     # Default remote mode
       },
       constants: {
         classes: {
@@ -113,7 +113,7 @@ module SmartListing
       @options = {}
     end
 
-    def method_missing(sym, *args)
+    def method_missing(sym, *args) # rubocop:disable Style/MissingRespondToMissing
       @options[sym] = *args
     end
 
@@ -147,7 +147,7 @@ module SmartListing
         @options[:global_options] ||= {}
         @options[:global_options].merge!(value)
       end
-      !@options[:global_options] ? DEFAULTS[:global_options] : DEFAULTS[:global_options].deep_merge(@options[:global_options])
+      @options[:global_options] ? DEFAULTS[:global_options].deep_merge(@options[:global_options]) : DEFAULTS[:global_options]
     end
 
     def to_json(*_args)
