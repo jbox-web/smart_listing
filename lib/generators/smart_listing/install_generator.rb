@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
+require 'rails/generators'
+
 module SmartListing
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      source_root File.expand_path('../templates', __FILE__)
+      source_root File.expand_path('templates', __dir__)
 
-      def self.banner #:nodoc:
-        <<-BANNER.chomp
-rails g smart_listing:install
+      def self.banner # :nodoc:
+        <<~BANNER.chomp
+          rails g smart_listing:install
 
-    Copies initializer file
-BANNER
+            Copies initializer file
+        BANNER
       end
 
       desc ''

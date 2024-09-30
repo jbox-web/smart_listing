@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-require 'smart_listing/config'
-require 'smart_listing/engine'
+# require external dependencies
 require 'kaminari'
+
+# require internal dependencies
+require_relative 'smart_listing/engine'
+require_relative 'smart_listing/config'
+require_relative 'smart_listing/version'
 
 # Fix parsing nested params
 module Kaminari

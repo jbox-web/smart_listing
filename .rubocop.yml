@@ -13,7 +13,7 @@ AllCops:
     - bin/*
     - gemfiles/*
     - spec/dummy/**/*
-    - lib/generators/**/*.rb
+    - lib/generators/smart_listing/templates/*.rb
 
 Gemspec/RequireMFA:
   Enabled: false
