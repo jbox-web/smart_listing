@@ -5,12 +5,11 @@ module SmartListing
 
     class_attribute :smart_listing_helpers
 
-    def initialize(smart_listing_name, smart_listing, template, options, proc)
+    def initialize(smart_listing_name, smart_listing, template, options)
       @smart_listing_name = smart_listing_name
       @smart_listing = smart_listing
       @template = template
       @options = options
-      @proc = proc
     end
 
     def name

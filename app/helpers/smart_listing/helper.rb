@@ -53,7 +53,7 @@ module SmartListing
       options = args.extract_options!
       bare = options.delete(:bare)
 
-      builder = SmartListing::Builder.new(name, @smart_listings[name], self, options, block)
+      builder = SmartListing::Builder.new(name, @smart_listings[name], self, options)
 
       data = {}
       data[smart_listing_config.data_attributes(:max_count)]     = @smart_listings[name].max_count if @smart_listings[name].max_count && @smart_listings[name].max_count > 0
@@ -173,7 +173,7 @@ module SmartListing
         return unless options[:force] # rubocop:disable Style/SoleNestedConditional
       end
 
-      builder = SmartListing::Builder.new(name, smart_listing, self, {}, nil)
+      builder = SmartListing::Builder.new(name, smart_listing, self, {})
       render(
         partial: 'smart_listing/update_list',
         locals: {
