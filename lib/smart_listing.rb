@@ -2,12 +2,13 @@
 
 # require external dependencies
 require 'kaminari'
+require 'zeitwerk'
 
-# require internal dependencies
-require_relative 'smart_listing/engine'
-require_relative 'smart_listing/base'
-require_relative 'smart_listing/config'
-require_relative 'smart_listing/version'
+# load zeitwerk
+Zeitwerk::Loader.for_gem.tap do |loader|
+  loader.ignore("#{__dir__}/generators")
+  loader.setup
+end
 
 # Fix parsing nested params
 module Kaminari
@@ -27,6 +28,8 @@ module Kaminari
 end
 
 module SmartListing
+  require_relative 'smart_listing/engine' if defined?(Rails)
+
   mattr_reader :configs
 
   @configs = {}
