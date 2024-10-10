@@ -1,20 +1,6 @@
 # frozen_string_literal: true
 
 module SmartListing
-  mattr_reader :configs
-
-  def self.configure(profile = nil)
-    profile ||= :default
-    @@configs ||= {} # rubocop:disable Style/ClassVars
-    yield @@configs[profile] ||= SmartListing::Configuration.new
-  end
-
-  def self.config(profile = nil)
-    profile ||= :default
-    @@configs ||= {} # rubocop:disable Style/ClassVars
-    @@configs[profile] ||= SmartListing::Configuration.new
-  end
-
   class Configuration
     DEFAULT_PAGE_SIZES = [10, 20, 50, 100].freeze
 

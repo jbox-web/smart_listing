@@ -27,5 +27,15 @@ module Kaminari
 end
 
 module SmartListing
+  mattr_reader :configs
 
+  @configs = {}
+
+  def self.configure(profile = :default)
+    yield @configs[profile] ||= SmartListing::Configuration.new
+  end
+
+  def self.config(profile = :default)
+    @configs[profile] ||= SmartListing::Configuration.new
+  end
 end
