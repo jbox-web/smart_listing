@@ -3,8 +3,11 @@
 require 'spec_helper'
 
 RSpec.describe SmartListing::Base do
-  describe '#per_page' do
+  def build_list(options: {})
+    SmartListing::Base.new(:users, User.all, options)
+  end
 
+  describe '#per_page' do
     context 'when there is no specification in params or cookies' do
       it 'take first value in the page sizes' do
         options = { page_sizes: [1] }
@@ -230,9 +233,5 @@ RSpec.describe SmartListing::Base do
         expect(list.collection).to_not include user1
       end
     end
-  end
-
-  def build_list(options: {})
-    SmartListing::Base.new(:users, User.all, options)
   end
 end
