@@ -39,7 +39,7 @@ module SmartListing
       @per_page = page_sizes.first unless page_sizes.include?(@per_page) || (unlimited_per_page? && @per_page == 0)
 
       @sort = parse_sort(get_param(:sort)) || @options[:default_sort]
-      sort_keys = (@options[:sort_attributes] == :implicit ? @sort.keys.collect { |s| [s, s] } : @options[:sort_attributes])
+      @sort_keys = (@options[:sort_attributes] == :implicit ? @sort.keys.collect { |s| [s, s] } : @options[:sort_attributes])
 
       set_param(:per_page, @per_page, cookies) if @options[:memorize_per_page]
 
@@ -52,40 +52,7 @@ module SmartListing
         @page = no_pages if @page.to_i > no_pages
       end
 
-      if @options[:array]
-        if @sort && !@sort.empty? # when array we sort only by first attribute
-          i = sort_keys.index { |x| x[0] == @sort.to_h.first[0] }
-          @collection = @collection.sort do |x, y|
-            xval = x
-            yval = y
-            sort_keys[i][1].split('.').each do |m|
-              xval = xval.try(m)
-              yval = yval.try(m)
-            end
-            xval = xval.upcase if xval.is_a?(String)
-            yval = yval.upcase if yval.is_a?(String)
-
-            if xval.nil? || yval.nil?
-              xval.nil? ? 1 : -1
-            else
-              if @sort.to_h.first[1] == 'asc' # rubocop:disable Style/IfInsideElse
-                (xval <=> yval) || (xval && !yval ? 1 : -1)
-              else
-                (yval <=> xval) || (yval && !xval ? 1 : -1)
-              end
-            end
-          end
-        end
-        if @options[:paginate] && @per_page > 0
-          @pagy_collection, @collection = pagy_array(@collection, page: @page, limit: @per_page, params: pagy_options.fetch(:params, {}).merge(smart_listing_name: name))
-        end
-      else
-        # let's sort by all attributes
-        if @sort && !@sort.empty?
-          @collection = @collection.order(sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
-        end
-        @pagy_collection, @collection = pagy(@collection, page: @page, limit: @per_page, params: pagy_options.fetch(:params, {}).merge(smart_listing_name: name)) if @options[:paginate] && @per_page > 0
-      end
+      @options[:array] ? sort_array : sort_active_record
     end
     # rubocop:enable Layout/LineLength
 
@@ -189,5 +156,50 @@ module SmartListing
 
       sort
     end
+
+    def sort_array
+      # when array we sort only by first attribute
+      if @sort && !@sort.empty?
+        i = @sort_keys.index { |x| x[0] == @sort.to_h.first[0] }
+        @collection = @collection.sort do |x, y|
+          xval = x
+          yval = y
+          @sort_keys[i][1].split('.').each do |m|
+            xval = xval.try(m)
+            yval = yval.try(m)
+          end
+          xval = xval.upcase if xval.is_a?(String)
+          yval = yval.upcase if yval.is_a?(String)
+
+          if xval.nil? || yval.nil?
+            xval.nil? ? 1 : -1
+          else
+            if @sort.to_h.first[1] == 'asc' # rubocop:disable Style/IfInsideElse
+              (xval <=> yval) || (xval && !yval ? 1 : -1)
+            else
+              (yval <=> xval) || (yval && !xval ? 1 : -1)
+            end
+          end
+        end
+      end
+
+      return unless @options[:paginate] && @per_page > 0
+
+      params = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
+      @pagy_collection, @collection = pagy_array(@collection, page: @page, limit: @per_page, params: params)
+    end
+
+    def sort_active_record
+      # let's sort by all attributes
+      if @sort && !@sort.empty?
+        @collection = @collection.order(@sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
+      end
+
+      return unless @options[:paginate] && @per_page > 0
+
+      params = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
+      @pagy_collection, @collection = pagy(@collection, page: @page, limit: @per_page, params: params)
+    end
+
   end
 end
