@@ -24,6 +24,7 @@ module SmartListing
       @collection = @options[:array] ? collection.to_a : collection
     end
 
+    # rubocop:disable Layout/LineLength
     def setup(params, cookies)
       @params = params
       @params = @params.to_unsafe_h if @params.respond_to?(:to_unsafe_h)
@@ -85,6 +86,7 @@ module SmartListing
         @collection = @collection.page(@page).per(@per_page) if @options[:paginate] && @per_page > 0
       end
     end
+    # rubocop:enable Layout/LineLength
 
     def partial
       @options[:partial]

@@ -48,6 +48,7 @@ module SmartListing
       @template.render(partial: 'smart_listing/pagination_per_page_links', locals: default_locals.merge(locals))
     end
 
+    # rubocop:disable Style/IfUnlessModifier
     def pagination_per_page_link(page)
       if @smart_listing.per_page.to_i != page
         url = @template.url_for(@smart_listing.params.merge(@smart_listing.all_params(per_page: page, page: 1)))
@@ -60,6 +61,7 @@ module SmartListing
 
       @template.render(partial: 'smart_listing/pagination_per_page_link', locals: default_locals.merge(locals))
     end
+    # rubocop:enable Style/IfUnlessModifier
 
     def sortable(title, attribute, options = {})
       dirs = options[:sort_dirs] || @smart_listing.sort_dirs || [nil, 'asc', 'desc']
@@ -108,6 +110,7 @@ module SmartListing
     end
 
     # Add new item button & placeholder to list
+    # rubocop:disable Layout/LineLength
     def item_new(options = {}, &block)
       no_records_classes = [@template.smart_listing_config.classes(:no_records)]
       no_records_classes << @template.smart_listing_config.classes(:hidden) unless empty?
@@ -139,6 +142,7 @@ module SmartListing
 
       @template.render(partial: 'smart_listing/item_new', locals: default_locals.merge(locals))
     end
+    # rubocop:enable Layout/LineLength
 
     def count
       @smart_listing.count

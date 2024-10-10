@@ -43,7 +43,7 @@ module SmartListing
     end
 
     # Outputs smart list container
-    # rubocop:disable Style/IfUnlessModifier
+    # rubocop:disable Layout/LineLength
     def smart_listing_for(name, *args, &block)
       raise ArgumentError, 'Missing block' unless block
 
@@ -71,7 +71,7 @@ module SmartListing
         end
       end
     end
-    # rubocop:enable Style/IfUnlessModifier
+    # rubocop:enable Layout/LineLength
 
     def smart_listing_render(name = controller_name, *args)
       options = args.dup.extract_options!
@@ -80,6 +80,7 @@ module SmartListing
       end
     end
 
+    # rubocop:disable Layout/LineLength
     def smart_listing_controls_for(name, *args, &block)
       smart_listing = @smart_listings.try(:[], name)
 
@@ -92,6 +93,7 @@ module SmartListing
         concat(capture(&block))
       end
     end
+    # rubocop:enable Layout/LineLength
 
     # Render item action buttons (ie. edit, destroy and custom ones)
     def smart_listing_item_actions(actions = [])
@@ -183,6 +185,7 @@ module SmartListing
     # Possible calls:
     # smart_listing_item name, item_action, object = nil, partial = nil, options = {}
     # smart_listing_item item_action, object = nil, partial = nil, options = {}
+    # rubocop:disable Layout/LineLength
     def smart_listing_item(*args)
       options = args.extract_options!
       if %i[create create_continue destroy edit new remove update].include?(args[1])
@@ -203,5 +206,6 @@ module SmartListing
 
       render(partial: "smart_listing/item/#{item_action}", locals: { name: name, id: id, valid: valid, object_key: object_key, object: object, part: partial, new: new })
     end
+    # rubocop:enable Layout/LineLength
   end
 end

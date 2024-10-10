@@ -39,11 +39,7 @@ Style/NumericPredicate:
 ##########
 
 Layout/LineLength:
-  Max: 125
-  Exclude:
-    - app/helpers/smart_listing/helper.rb
-    - lib/smart_listing.rb
-    - smart_listing.gemspec
+  Max: 150
 
 Layout/EmptyLines:
   Enabled: false
@@ -106,6 +102,9 @@ RSpec/ExampleLength:
   Max: 9
 
 RSpec/MultipleExpectations:
+  Max: 4
+
+RSpec/NestedGroups:
   Max: 4
 
 RSpec/MetadataStyle:
