@@ -3,8 +3,6 @@
 module SmartListing
   class Builder
 
-    class_attribute :smart_listing_helpers
-
     def initialize(smart_listing_name, smart_listing, template, options)
       @smart_listing_name = smart_listing_name
       @smart_listing = smart_listing
