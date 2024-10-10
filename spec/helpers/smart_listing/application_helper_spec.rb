@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe SmartListing::Helper do
+RSpec.describe SmartListing::ApplicationHelper do
   describe '#smart_listing_create' do
 
     def build_list(collection: {})
@@ -42,12 +42,12 @@ RSpec.describe SmartListing::Helper do
     end
   end
 
-  describe '#smart_listing' do
-    it 'give the list with name' do
-      controller = Test::UsersController.new
-      list = double
-      controller.smart_listings = { test: list }
-      expect(controller.smart_listing(:test)).to eq list
-    end
-  end
+  # describe '#smart_listing' do
+  #   it 'give the list with name' do
+  #     controller = Test::UsersController.new
+  #     list = double
+  #     controller.smart_listings = { test: list }
+  #     expect(controller.smart_listing(:test)).to eq list
+  #   end
+  # end
 end

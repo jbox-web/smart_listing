@@ -1,20 +1,6 @@
 # frozen_string_literal: true
 
 module SmartListing
-  mattr_reader :configs
-
-  def self.configure(profile = nil)
-    profile ||= :default
-    @@configs ||= {} # rubocop:disable Style/ClassVars
-    yield @@configs[profile] ||= SmartListing::Configuration.new
-  end
-
-  def self.config(profile = nil)
-    profile ||= :default
-    @@configs ||= {} # rubocop:disable Style/ClassVars
-    @@configs[profile] ||= SmartListing::Configuration.new
-  end
-
   class Configuration
     DEFAULT_PAGE_SIZES = [10, 20, 50, 100].freeze
 
@@ -31,7 +17,7 @@ module SmartListing
         paginate: true, # allow pagination
         memorize_per_page: false,
         page_sizes: DEFAULT_PAGE_SIZES.dup, # set available page sizes array
-        kaminari_options: { theme: 'smart_listing' }, # Kaminari's paginate helper options
+        pagy_options: { theme: 'smart_listing/pagination' }, # Pagy's paginate helper options
         sort_dirs: [nil, 'asc', 'desc'], # Default sorting directions cycle of sortables
         remote: true                     # Default remote mode
       },
