@@ -2,6 +2,8 @@
 
 module SmartListing
   module Helper
+    include Pagy::Frontend
+
     module ControllerExtensions
       # Creates new smart listing
       #
@@ -143,6 +145,14 @@ module SmartListing
       smart_listing = @smart_listings[name]
 
       smart_listing.max_count - smart_listing.count
+    end
+
+    def pagy_url_for(pagy, page, absolute: false) # rubocop:disable Lint/UnusedMethodArgument
+      list = pagy.vars[:params][:smart_listing_name]
+      url_params = params.to_unsafe_h.merge(pagy.vars[:params])
+      url_params[:"#{list}_smart_listing"] ||= {}
+      url_params[:"#{list}_smart_listing"][pagy.vars[:page_param]] = page
+      url_for(url_params)
     end
 
     #################################################################################################

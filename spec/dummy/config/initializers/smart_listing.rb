@@ -11,7 +11,7 @@ SmartListing.configure do |config|
     #:paginate                       => true,                        # allow pagination
     #:memorize_per_page              => false,                       # save per page settings in the cookie
     :page_sizes                     => [3, 10],          # set available page sizes array
-    #:kaminari_options               => {:theme => "smart_listing"}, # Kaminari's paginate helper options
+    #:pagy_options                   => {:partial => "smart_listing/pagination"}, # Pagy's paginate helper options
     #:sort_dirs                      => [nil, "asc", "desc"],        # Default sorting directions cycle of sortables
   })
 

@@ -18,10 +18,9 @@ module SmartListing
     end
 
     def paginate(_options = {})
-      return unless @smart_listing.collection.respond_to? :current_page
+      return unless @smart_listing.pagy_collection.series.size > 1
 
-      options = { remote: @smart_listing.remote?, param_name: @smart_listing.param_name(:page) }.merge(@smart_listing.kaminari_options)
-      @template.paginate @smart_listing.collection, **options
+      render(partial: @smart_listing.pagy_options[:partial], locals: { pagy: @smart_listing.pagy_collection, remote: @smart_listing.remote? }).html_safe
     end
 
     def collection
@@ -110,7 +109,6 @@ module SmartListing
     end
 
     # Add new item button & placeholder to list
-    # rubocop:disable Layout/LineLength
     def item_new(options = {}, &block)
       no_records_classes = [@template.smart_listing_config.classes(:no_records)]
       no_records_classes << @template.smart_listing_config.classes(:hidden) unless empty?
@@ -142,7 +140,6 @@ module SmartListing
 
       @template.render(partial: 'smart_listing/item_new', locals: default_locals.merge(locals))
     end
-    # rubocop:enable Layout/LineLength
 
     def count
       @smart_listing.count

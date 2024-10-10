@@ -2,13 +2,16 @@
 
 module SmartListing
   class Base
-    attr_reader :name, :collection, :options, :per_page, :sort, :page, :count, :params
+    include Pagy::Backend
+
+    attr_reader :name, :collection, :options, :per_page, :sort, :page, :count, :params, :pagy_collection
 
     # Params that should not be visible in pagination links (pages, per-page, sorting, etc.)
     UNSAFE_PARAMS = %i[authenticity_token commit utf8 _method script_name].freeze
 
     def initialize(name, collection, options = {})
       @name = name
+      @pagy_collection = nil
 
       config_profile = options.delete(:config_profile)
 
@@ -74,16 +77,14 @@ module SmartListing
           end
         end
         if @options[:paginate] && @per_page > 0
-          @collection = ::Kaminari.paginate_array(@collection).page(@page).per(@per_page)
-          @collection = @collection.page(@collection.total_pages) if @collection.empty?
+          @pagy_collection, @collection = pagy_array(@collection, page: @page, limit: @per_page, params: pagy_options.fetch(:params, {}).merge(smart_listing_name: name))
         end
       else
         # let's sort by all attributes
-        #
         if @sort && !@sort.empty?
           @collection = @collection.order(sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
         end
-        @collection = @collection.page(@page).per(@per_page) if @options[:paginate] && @per_page > 0
+        @pagy_collection, @collection = pagy(@collection, page: @page, limit: @per_page, params: pagy_options.fetch(:params, {}).merge(smart_listing_name: name)) if @options[:paginate] && @per_page > 0
       end
     end
     # rubocop:enable Layout/LineLength
@@ -124,8 +125,8 @@ module SmartListing
       @options[:page_sizes]
     end
 
-    def kaminari_options
-      @options[:kaminari_options]
+    def pagy_options
+      @options[:pagy_options]
     end
 
     def sort_dirs

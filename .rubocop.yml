@@ -39,7 +39,7 @@ Style/NumericPredicate:
 ##########
 
 Layout/LineLength:
-  Max: 150
+  Max: 155
 
 Layout/EmptyLines:
   Enabled: false
