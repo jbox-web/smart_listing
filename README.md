@@ -71,7 +71,7 @@ Next, put following code in controller action you desire:
 @users = smart_listing_create(:users, User.active, partial: "users/listing")
 ```
 
-This will create SmartListing named `:users` consisting of ActiveRecord scope `User.active` elements and rendered by partial `users/listing`. You can also use arrays instead of ActiveRecord collections. Just put `array: true` option just like for Kaminari.
+This will create SmartListing named `:users` consisting of ActiveRecord scope `User.active` elements and rendered by partial `users/listing`. You can also use arrays instead of ActiveRecord collections. Just put `array: true` option just like for Pagy.
 
 In the main view (typically something like `index.html.erb` or `index.html.haml`), use this method to render listing:
 
@@ -101,8 +101,8 @@ smart_listing_render(:users)
 
 You can see that listing template has access to special `smart_listing` local variable which is basically an instance of `SmartListing::Helper::Builder`. It provides you with some helper methods that ease rendering of SmartListing:
 
-* `Builder#paginate` - renders Kaminari pagination,
-* `Builder#pagination_per_page_links` - display some link that allow you to customize Kaminari's `per_page`,
+* `Builder#paginate` - renders Pagy pagination,
+* `Builder#pagination_per_page_links` - display some link that allow you to customize Pagy's `per_page`,
 * `Builder#collection` - accesses underlying list of items,
 * `Builder#empty?` - checks if collection is empty,
 * `Builder#count` - returns collection count,
@@ -282,7 +282,7 @@ For more information and some use cases, see the [Showcase](http://showcase.solo
 
 ## Credits
 
-SmartListing uses great pagination gem Kaminari https://github.com/amatsuda/kaminari
+SmartListing uses great pagination gem Pagy https://github.com/ddnexus/pagy
 
 Created by Sology http://www.sology.eu
 
