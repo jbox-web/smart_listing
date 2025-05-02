@@ -4,7 +4,12 @@
 RSpec.configure do |config|
   config.include WaitForAjax, type: :feature
 
-  config.fixture_path = Rails.root.join('spec', 'fixtures')
+  if config.respond_to?(:fixture_paths=)
+    config.fixture_paths = [Rails.root.join('spec', 'fixtures')]
+  else
+    config.fixture_path = Rails.root.join('spec', 'fixtures')
+  end
+
   config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!
 
