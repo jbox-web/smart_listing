@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.description = 'Ruby on Rails data listing gem with built-in sorting, filtering and in-place editing.'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 3.1.0'
+  s.required_ruby_version = '>= 3.2.0'
 
   s.files = Dir['README.md', 'Changed.md', 'LICENSE', 'lib/**/*.rb', 'config/**/*.yml', 'app/**/*.rb', 'app/**/*.erb']
 
