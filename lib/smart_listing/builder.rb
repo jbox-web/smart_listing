@@ -26,7 +26,7 @@ module SmartListing
 
     # Check if smart list is empty
     def empty?
-      @smart_listing.count == 0
+      @smart_listing.count == 0 # rubocop:disable Style/CollectionQuerying
     end
 
     def pagination_per_page_links(_options = {})
