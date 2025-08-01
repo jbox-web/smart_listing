@@ -28,6 +28,7 @@ require_relative 'config_rspec'
 module Test
   class UsersController < ApplicationController
     include SmartListing::Helper::ControllerExtensions
+
     helper  SmartListing::Helper
 
     attr_accessor :smart_listings
