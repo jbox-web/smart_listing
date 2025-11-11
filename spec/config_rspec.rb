@@ -42,7 +42,7 @@ RSpec.configure do |config|
 
   if ENV.key?('GITHUB_ACTIONS')
     config.around do |ex|
-      ex.run_with_retry retry: 3
+      ex.run_with_retry retry: 2
     end
   end
 end
