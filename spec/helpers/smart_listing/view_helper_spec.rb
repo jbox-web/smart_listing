@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-RSpec.describe SmartListing::Helper do
+RSpec.describe SmartListing::ViewHelper do
   describe '#smart_listing_create' do
 
     def build_list(collection: {})
-      double(collection: collection, setup: nil).tap do |list| # rubocop:disable RSpec/VerifiedDoubles
+      double(collection: collection, setup: nil).tap do |list|
         allow(SmartListing::Base).to receive(:new).and_return(list)
       end
     end

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  include SmartListing::Helper::ControllerExtensions
-  helper  SmartListing::Helper
+  include SmartListing::ControllerHelper
+  helper  SmartListing::ViewHelper
 
   def index
     smart_listing_create partial: 'users/list'

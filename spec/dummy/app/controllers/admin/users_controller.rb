@@ -1,6 +1,6 @@
 class Admin::UsersController < ApplicationController
-  include SmartListing::Helper::ControllerExtensions
-  helper  SmartListing::Helper
+  include SmartListing::ControllerHelper
+  helper  SmartListing::ViewHelper
 
   before_action :find_user, except: [:index, :new, :create]
 

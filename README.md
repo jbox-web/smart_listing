@@ -61,8 +61,8 @@ Files will be placed in `app/views/smart_listing`.
 Let's start with a controller. In order to use SmartListing, in most cases you need to include controller extensions and SmartListing helper methods:
 
 ```ruby
-include SmartListing::Helper::ControllerExtensions
-helper  SmartListing::Helper
+include SmartListing::ControllerHelper
+helper  SmartListing::ViewHelper
 ```
 
 Next, put following code in controller action you desire:

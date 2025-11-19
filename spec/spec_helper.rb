@@ -46,9 +46,9 @@ DbgRb.highlight!('🎉💔💣🕺🚀🧨🙈🤯🥳🌈🦄')
 
 module Test
   class UsersController < ApplicationController
-    include SmartListing::Helper::ControllerExtensions
+    include SmartListing::ControllerHelper
 
-    helper  SmartListing::Helper
+    helper  SmartListing::ViewHelper
 
     attr_accessor :smart_listings
 
