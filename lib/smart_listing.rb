@@ -2,7 +2,8 @@
 
 # require external dependencies
 require 'pagy'
-require 'pagy/extras/array'
+require 'pagy/toolbox/helpers/support/series'
+require 'pagy/toolbox/helpers/support/a_lambda'
 require 'zeitwerk'
 
 # load zeitwerk

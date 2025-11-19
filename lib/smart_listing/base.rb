@@ -2,15 +2,16 @@
 
 module SmartListing
   class Base
-    include Pagy::Backend
+    include Pagy::Method
 
     attr_reader :name, :collection, :options, :per_page, :sort, :page, :count, :params, :pagy_collection
 
     # Params that should not be visible in pagination links (pages, per-page, sorting, etc.)
     UNSAFE_PARAMS = %i[authenticity_token commit utf8 _method script_name].freeze
 
-    def initialize(name, collection, options = {})
+    def initialize(name, collection, view_context, options = {})
       @name = name
+      @view_context = view_context
       @pagy_collection = nil
 
       config_profile = options.delete(:config_profile)
@@ -53,12 +54,16 @@ module SmartListing
       end
 
       sort!(@options[:array])
-      paginate!(@options[:array])
+      paginate!
     end
     # rubocop:enable Layout/LineLength
 
     def partial
       @options[:partial]
+    end
+
+    def path
+      @options[:path]
     end
 
     def param_names
@@ -117,6 +122,10 @@ module SmartListing
       "#{name}_smart_listing"
     end
 
+    def request
+      @view_context.request
+    end
+
     private
 
     def get_param(key, store = @params)
@@ -162,16 +171,20 @@ module SmartListing
       is_array ? sort_array : sort_active_record
     end
 
-    def paginate!(is_array)
+    def paginate!
       return unless @options[:paginate] && @per_page > 0
 
-      params = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
+      root_key = :"#{name}_smart_listing"
+      sort     = @view_context.params.dig(root_key, :sort)&.to_unsafe_h
+      params   = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
+      querify  = ->(p) { merge_params(p, params, root_key, sort) }
 
-      if is_array
-        @pagy_collection, @collection = pagy_array(@collection, page: @page, limit: @per_page, params: params)
-      else
-        @pagy_collection, @collection = pagy(@collection, page: @page, limit: @per_page, params: params)
-      end
+      @pagy_collection, @collection = pagy(:offset, @collection, page: @page, limit: @per_page, root_key: root_key, path: path, querify: querify)
+    end
+
+    def merge_params(pagy_params, params, root_key, sort)
+      pagy_params[root_key][:sort] = sort if sort
+      pagy_params.merge!(params)
     end
 
     def sort_array

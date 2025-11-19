@@ -16,7 +16,7 @@ module SmartListing
       view_context = respond_to?(:controller) ? controller.view_context : self.view_context
       options = { config_profile: view_context.smart_listing_config_profile }.merge(options)
 
-      list = SmartListing::Base.new(name, collection, options)
+      list = SmartListing::Base.new(name, collection, view_context, options)
       list.setup(params, cookies)
 
       @smart_listings ||= {}

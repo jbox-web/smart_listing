@@ -3,11 +3,39 @@
 require 'spec_helper'
 
 RSpec.describe SmartListing::Base do
-  def build_list(options: {})
-    SmartListing::Base.new(:users, User.all, options)
+  let(:view_context) { instance_double(ActionView::Base) }
+  let(:request) { instance_double(ActionDispatch::Request) }
+
+  def set_expectations
+    allow(view_context).to receive_messages(params: {}, request: request)
+    allow(request).to receive_messages(
+      base_url: 'http://example.com',
+      path: '/paginate',
+      GET: {},
+      POST: {},
+      cookies: {}
+    )
   end
 
-  describe '#per_page' do
+  def check_expectations
+    expect(view_context).to have_received(:params)
+    expect(request).to have_received(:base_url)
+    expect(request).to have_received(:path)
+    expect(request).to have_received(:GET)
+    expect(request).to have_received(:POST)
+    expect(request).to have_received(:cookies)
+    expect(view_context).to have_received(:request)
+  end
+
+  before(mock_view_context: true) { set_expectations }
+  after(mock_view_context: true)  { check_expectations }
+
+
+  def build_list(options: {})
+    SmartListing::Base.new(:users, User.all, view_context, options)
+  end
+
+  describe '#per_page', mock_view_context: true do
     context 'when there is no specification in params or cookies' do
       it 'take first value in the page sizes' do
         options = { page_sizes: [1] }
@@ -68,7 +96,7 @@ RSpec.describe SmartListing::Base do
     end
 
     context 'when the per page value is at 0' do
-      context 'when the unlimited per page option is enabled' do
+      context 'when the unlimited per page option is enabled', mock_view_context: false do
         it 'set the per page at 0' do
           options = { page_sizes: [1, 2], unlimited_per_page: true }
           list = build_list(options: options)
@@ -104,7 +132,7 @@ RSpec.describe SmartListing::Base do
     end
   end
 
-  describe '#sort' do
+  describe '#sort', mock_view_context: true do
     context 'when there is a value in params' do
       it 'set sort with the given value' do
         list = build_list
@@ -128,7 +156,7 @@ RSpec.describe SmartListing::Base do
     end
   end
 
-  describe '#page' do
+  describe '#page', mock_view_context: true do
     context 'when the page is in the range' do
       it 'set the value with the given params' do
         User.create
@@ -156,7 +184,7 @@ RSpec.describe SmartListing::Base do
     end
   end
 
-  describe '#collection' do
+  describe '#collection', mock_view_context: true do
     context 'when the collection is an array' do
       it 'sort the collection by the first attribute' do
         user1 = User.create(name: '1')

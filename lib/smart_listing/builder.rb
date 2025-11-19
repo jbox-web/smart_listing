@@ -15,7 +15,7 @@ module SmartListing
     end
 
     def paginate(_options = {})
-      return unless @smart_listing.pagy_collection.series.size > 1
+      return unless @smart_listing.pagy_collection.send(:series).size > 1
 
       render(partial: @smart_listing.pagy_options[:partial], locals: { pagy: @smart_listing.pagy_collection, remote: @smart_listing.remote? }).html_safe
     end
