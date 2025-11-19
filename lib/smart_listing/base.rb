@@ -52,7 +52,8 @@ module SmartListing
         @page = no_pages if @page.to_i > no_pages
       end
 
-      @options[:array] ? sort_array : sort_active_record
+      sort!(@options[:array])
+      paginate!(@options[:array])
     end
     # rubocop:enable Layout/LineLength
 
@@ -157,6 +158,22 @@ module SmartListing
       sort
     end
 
+    def sort!(is_array)
+      is_array ? sort_array : sort_active_record
+    end
+
+    def paginate!(is_array)
+      return unless @options[:paginate] && @per_page > 0
+
+      params = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
+
+      if is_array
+        @pagy_collection, @collection = pagy_array(@collection, page: @page, limit: @per_page, params: params)
+      else
+        @pagy_collection, @collection = pagy(@collection, page: @page, limit: @per_page, params: params)
+      end
+    end
+
     def sort_array
       # when array we sort only by first attribute
       if @sort && !@sort.empty?
@@ -182,11 +199,6 @@ module SmartListing
           end
         end
       end
-
-      return unless @options[:paginate] && @per_page > 0
-
-      params = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
-      @pagy_collection, @collection = pagy_array(@collection, page: @page, limit: @per_page, params: params)
     end
 
     def sort_active_record
@@ -194,11 +206,6 @@ module SmartListing
       if @sort && !@sort.empty?
         @collection = @collection.order(@sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
       end
-
-      return unless @options[:paginate] && @per_page > 0
-
-      params = pagy_options.fetch(:params, {}).merge(smart_listing_name: name)
-      @pagy_collection, @collection = pagy(@collection, page: @page, limit: @per_page, params: params)
     end
 
   end
