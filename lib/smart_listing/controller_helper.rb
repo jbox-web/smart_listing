@@ -25,6 +25,10 @@ module SmartListing
       list.collection
     end
 
+    def smart_listing_collection
+      []
+    end
+
     def smart_listing(name)
       @smart_listings[name.to_sym]
     end
