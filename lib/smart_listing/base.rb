@@ -176,26 +176,26 @@ module SmartListing
 
     def sort_array
       # when array we sort only by first attribute
-      if @sort && !@sort.empty?
-        i = @sort_keys.index { |x| x[0] == @sort.to_h.first[0] }
-        @collection = @collection.sort do |x, y|
-          xval = x
-          yval = y
-          @sort_keys[i][1].split('.').each do |m|
-            xval = xval.try(m)
-            yval = yval.try(m)
-          end
-          xval = xval.upcase if xval.is_a?(String)
-          yval = yval.upcase if yval.is_a?(String)
+      return unless @sort && !@sort.empty?
 
-          if xval.nil? || yval.nil?
-            xval.nil? ? 1 : -1
+      i = @sort_keys.index { |x| x[0] == @sort.to_h.first[0] }
+      @collection = @collection.sort do |x, y|
+        xval = x
+        yval = y
+        @sort_keys[i][1].split('.').each do |m|
+          xval = xval.try(m)
+          yval = yval.try(m)
+        end
+        xval = xval.upcase if xval.is_a?(String)
+        yval = yval.upcase if yval.is_a?(String)
+
+        if xval.nil? || yval.nil?
+          xval.nil? ? 1 : -1
+        else
+          if @sort.to_h.first[1] == 'asc' # rubocop:disable Style/IfInsideElse
+            (xval <=> yval) || (xval && !yval ? 1 : -1)
           else
-            if @sort.to_h.first[1] == 'asc' # rubocop:disable Style/IfInsideElse
-              (xval <=> yval) || (xval && !yval ? 1 : -1)
-            else
-              (yval <=> xval) || (yval && !xval ? 1 : -1)
-            end
+            (yval <=> xval) || (yval && !xval ? 1 : -1)
           end
         end
       end
@@ -203,9 +203,9 @@ module SmartListing
 
     def sort_active_record
       # let's sort by all attributes
-      if @sort && !@sort.empty?
-        @collection = @collection.order(@sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
-      end
+      return unless @sort && !@sort.empty?
+
+      @collection = @collection.order(@sort_keys.filter_map { |s| "#{s[1]} #{@sort[s[0]]}" if @sort[s[0]] })
     end
 
   end
