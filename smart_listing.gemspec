@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.files = Dir['README.md', 'Changed.md', 'LICENSE', 'lib/**/*.rb', 'config/**/*.yml', 'app/**/*.rb', 'app/**/*.erb']
 
   s.add_dependency 'pagy', '>= 43.1'
-  s.add_dependency 'rails', '>= 7.0'
+  s.add_dependency 'rails', '>= 7.2'
   s.add_dependency 'zeitwerk'
 end
