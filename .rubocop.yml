@@ -114,7 +114,7 @@ RSpec/MetadataStyle:
 # CAPYBARA #
 ############
 
-Capybara/NegationMatcher:
+Capybara/RSpec/NegationMatcher:
   EnforcedStyle: not_to
 
 Capybara/ClickLinkOrButtonStyle:

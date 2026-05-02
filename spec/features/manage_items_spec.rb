@@ -11,7 +11,7 @@ RSpec.feature 'Manage items' do
     fill_in 'Email', with: 'Test email'
     click_button 'Save'
 
-    expect(page).to have_content('Test name')
+    expect(page).to have_text('Test name')
   end
 
   scenario 'Edit an item', js: true do
@@ -23,8 +23,8 @@ RSpec.feature 'Manage items' do
     fill_in 'Email', with: 'Email 2'
     click_button 'Save'
 
-    expect(page).to have_content('Name 2')
-    expect(page).to_not have_content('Name 1')
+    expect(page).to have_text('Name 2')
+    expect(page).to_not have_text('Name 1')
   end
 
   scenario 'Delete an item', js: true do
@@ -34,7 +34,7 @@ RSpec.feature 'Manage items' do
     find('.destroy').click
     within('.confirmation_box') { click_button 'Yes' }
 
-    expect(page).to_not have_content('Name 1')
+    expect(page).to_not have_text('Name 1')
   end
 
   scenario 'Use a custom action', js: true do
@@ -43,6 +43,6 @@ RSpec.feature 'Manage items' do
     visit admin_users_path
     find('.change_name').click
 
-    expect(page).to have_content('Changed Name')
+    expect(page).to have_text('Changed Name')
   end
 end

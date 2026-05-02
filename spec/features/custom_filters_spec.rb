@@ -25,12 +25,12 @@ RSpec.feature 'Combine custom filtering' do
     visit admin_users_path
 
     find('.name a.sortable').click
-    expect(page).to have_content('Aaron')
-    expect(page).to_not have_content('Jane')
+    expect(page).to have_text('Aaron')
+    expect(page).to_not have_text('Jane')
 
     within('.pagination') { click_link '2' }
-    expect(page).to have_content('Jane')
-    expect(page).to_not have_content('Aaron')
+    expect(page).to have_text('Jane')
+    expect(page).to_not have_text('Aaron')
   end
 
   scenario 'The user combine filters', js: true do
@@ -51,8 +51,8 @@ RSpec.feature 'Combine custom filtering' do
 
     click_link 'Name'
     expect(page).to have_css('tr.editable', count: 2)
-    expect(page.find(:css, 'tbody > tr:nth-child(1)')).to have_content('Edward')
-    expect(page.find(:css, 'tbody > tr:nth-child(2)')).to have_content('Robin')
+    expect(page.find(:css, 'tbody > tr:nth-child(1)')).to have_text('Edward')
+    expect(page.find(:css, 'tbody > tr:nth-child(2)')).to have_text('Robin')
   end
 
   scenario 'The user combine filters, sort and change page', js: true do
@@ -63,10 +63,10 @@ RSpec.feature 'Combine custom filtering' do
     expect(find(:css, '.email a.sortable')[:href]).to include('boolean')
 
     click_link 'Email'
-    expect(page.find(:css, 'tbody > tr:nth-child(2)')).to have_content('Lisa')
+    expect(page.find(:css, 'tbody > tr:nth-child(2)')).to have_text('Lisa')
 
     within('.pagination') { click_link '2' }
-    expect(page.find(:css, 'tbody > tr:nth-child(1)')).to have_content('Robin')
-    expect(page.find(:css, '.count')).to have_content('4')
+    expect(page.find(:css, 'tbody > tr:nth-child(1)')).to have_text('Robin')
+    expect(page.find(:css, '.count')).to have_text('4')
   end
 end

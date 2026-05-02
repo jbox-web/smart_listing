@@ -9,25 +9,25 @@ RSpec.feature 'View a list of items' do
     visit root_path
 
     # page_sizes => [3, 10]
-    expect(page).to have_content('Betty')
-    expect(page).to_not have_content('Edward')
+    expect(page).to have_text('Betty')
+    expect(page).to_not have_text('Edward')
 
     within('.pagination') { click_link '2' }
 
-    expect(page).to have_content('Edward')
-    expect(page).to_not have_content('Betty')
+    expect(page).to have_text('Edward')
+    expect(page).to_not have_text('Betty')
   end
 
   scenario 'The user sort users', js: true do
     visit sortable_users_path
 
     find('.name a').click
-    expect(find(:xpath, '//table/tbody/tr[1]')).to have_content('Aaron')
-    expect(find(:xpath, '//table/tbody/tr[2]')).to have_content('Betty')
+    expect(find(:xpath, '//table/tbody/tr[1]')).to have_text('Aaron')
+    expect(find(:xpath, '//table/tbody/tr[2]')).to have_text('Betty')
 
     find('.name a').click
-    expect(find(:xpath, '//table/tbody/tr[1]')).to have_content('Sara')
-    expect(find(:xpath, '//table/tbody/tr[2]')).to have_content('Robin')
+    expect(find(:xpath, '//table/tbody/tr[1]')).to have_text('Sara')
+    expect(find(:xpath, '//table/tbody/tr[2]')).to have_text('Robin')
   end
 
   scenario 'The user search user', js: true do
@@ -35,12 +35,12 @@ RSpec.feature 'View a list of items' do
 
     fill_in 'filter', with: 'ja'
 
-    expect(page).to have_content('Jane')
-    expect(page).to_not have_content('Aaron')
+    expect(page).to have_text('Jane')
+    expect(page).to_not have_text('Aaron')
 
     fill_in 'filter', with: 'ni'
 
-    expect(page).to_not have_content('Nicholas')
-    expect(page).to_not have_content('Jane')
+    expect(page).to_not have_text('Nicholas')
+    expect(page).to_not have_text('Jane')
   end
 end
